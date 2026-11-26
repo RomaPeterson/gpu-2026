@@ -1,4 +1,5 @@
 #include "gelu_ocl.h"
+#define CL_USE_DEPRECATED_OPENCL_1_2_APIS
 #include <CL/cl.h>
 #include <stdexcept>
 #include <string>
@@ -33,7 +34,7 @@ std::vector<float> GeluOCL(const std::vector<float>& input, int platform) {
     cl_mem in = nullptr, out = nullptr;
     try {
         context = clCreateContext(nullptr, 1, &device, nullptr, nullptr, &error); Check(error);
-        queue = clCreateCommandQueueWithProperties(context, device, nullptr, &error); Check(error);
+        queue = clCreateCommandQueue(context, device, 0, &error); Check(error);
         program = clCreateProgramWithSource(context, 1, &source, nullptr, &error); Check(error);
         error = clBuildProgram(program, 1, &device, nullptr, nullptr, nullptr);
         if (error != CL_SUCCESS) {
